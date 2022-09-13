@@ -1,0 +1,23 @@
+.main_layout {
+  min-height: 100vh;
+  &__sider_menu {
+    margin-top: 64px;
+  }
+  &__header {
+    background: #fff;
+    padding: 0;
+  }
+  &__content {
+    margin: 24px 16px;
+    padding: 24px;
+    background-color: #fff;
+  }
+}
+
+.sider_toggle {
+  padding: 0 24px;
+  font-size: 18px;
+  line-height: 64px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
