@@ -25,7 +25,7 @@ const MoviesList= () => {
       <div>
         {loading && <span>Загрузка...</span>}
         {!loading && !moviesData.length && <span>Нет фильмов...</span>}
-        {!loading && moviesData.length && <Row gutter={12}>
+        {!loading && !!moviesData.length && <Row gutter={12}>
           {
                   moviesData.map(movie => {
                   return (

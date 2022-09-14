@@ -18,7 +18,7 @@ const MainLayout: FC<IProps> = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (pathname === '/') navigate('/users_page');
+    if (pathname === '/') navigate('/about');
   }, []);
 
   const handleSiderToggle = () => setIsCollapsed((prev) => !prev);

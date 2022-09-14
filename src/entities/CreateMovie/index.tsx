@@ -59,7 +59,7 @@ const CreateMoviePage = () => {
               </Form.Item>
 
               <Form.Item
-                label="Ссылка на постер"
+                label="Ссылка на картинку"
                 name="poster"
                 rules={[{ required: true, message: 'Please input poster!' }, { type: 'url', warningOnly: true }, { type: 'string', min: 6 }]}
               >

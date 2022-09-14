@@ -30,7 +30,7 @@ const Movie = () => {
     return (
       <>
       {loading && <p>Загрузка...</p>}
-      {!loading && 
+      {!loading && movie &&
       <div >
             <h3>{(movie as IMovie).moviename}</h3>
             <Row>

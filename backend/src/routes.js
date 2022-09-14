@@ -24,7 +24,7 @@ export default [
         path: '/api/users',
         handler: controllers.getUsers,
         config: {
-            cors : true,
+            cors: true,
         }
     },
 
@@ -39,7 +39,7 @@ export default [
                     password: Joi.string().min(6).required(),
                 }),
             },
-            cors : true,
+            cors: true,
         }
     },
     {
@@ -50,7 +50,7 @@ export default [
             auth: {
                 strategy: 'user',
             },
-            cors : true,
+            cors: true,
         }
     },
     {
@@ -67,7 +67,7 @@ export default [
                     aboutMyself: Joi.string(),
                 }),
             },
-            cors : true,
+            cors: true,
         }
     },
     {
@@ -76,7 +76,7 @@ export default [
         handler: controllers.editUser,
         options: {
             auth: {
-                strategies:['user','admin']
+                strategies: ['user', 'admin']
             },
             validate: {
                 payload: Joi.object({
@@ -86,19 +86,16 @@ export default [
                     aboutMyself: Joi.string(),
                 }),
             },
-            cors : true,
+            cors: true,
         }
     },
     {
-        method: 'POST',
+        method: 'GET',
         path: '/api/addMovie',
         handler: controllers.addMovie,
         options: {
-            // auth: {
-            //     strategies:['user','admin']
-            // },
             validate: {
-                payload: Joi.object({
+                query: Joi.object({
                     moviename: Joi.string().max(3000).required(),
                     description: Joi.string().max(3000).required(),
                     poster: Joi.string().max(3000).required(),
@@ -106,7 +103,7 @@ export default [
                     year: Joi.number().max(2023).required()
                 }),
             },
-            cors : true,
+            cors: true,
         }
     },
     {
@@ -115,14 +112,14 @@ export default [
         handler: controllers.deleteMovie,
         options: {
             auth: {
-                strategies:['user','admin']
+                strategies: ['user', 'admin']
             },
             validate: {
                 payload: Joi.object({
                     postId: Joi.string().min(36).required(),
                 }),
             },
-            cors : true,
+            cors: true,
         },
 
     },
@@ -132,7 +129,7 @@ export default [
         handler: controllers.editMovie,
         options: {
             auth: {
-                strategies:['user','admin']
+                strategies: ['user', 'admin']
             },
             validate: {
                 payload: Joi.object({
@@ -142,7 +139,7 @@ export default [
 
                 }),
             },
-            cors : true,
+            cors: true,
         },
 
     },
@@ -151,7 +148,7 @@ export default [
         path: '/api/movies/{MovieId}',
         handler: controllers.getMovie,
         config: {
-            cors : true,
+            cors: true,
         },
     },
     {
@@ -159,7 +156,7 @@ export default [
         path: '/api/movies',
         handler: controllers.getMovies,
         config: {
-            cors : true,
+            cors: true,
         }
     },
     {
@@ -172,7 +169,7 @@ export default [
                     postId: Joi.string().min(36).required(),
                 }),
             },
-            cors : true,
+            cors: true,
         }
     },
     {
@@ -189,7 +186,7 @@ export default [
                     postId: Joi.string().min(36).required(),
                 }),
             },
-            cors : true,
+            cors: true,
         }
     },
     {
@@ -198,14 +195,14 @@ export default [
         handler: controllers.deleteComment,
         options: {
             auth: {
-                strategies:['user','admin']
+                strategies: ['user', 'admin']
             },
             validate: {
                 payload: Joi.object({
                     commentId: Joi.string().min(36).required(),
                 }),
             },
-            cors : true,
+            cors: true,
         }
     },
     {
@@ -214,7 +211,7 @@ export default [
         handler: controllers.editComment,
         options: {
             auth: {
-                strategies:['user','admin']
+                strategies: ['user', 'admin']
             },
             validate: {
                 payload: Joi.object({
@@ -222,7 +219,7 @@ export default [
                     commentId: Joi.string().min(36).required(),
                 }),
             },
-            cors : true,
+            cors: true,
         }
     },
     {
@@ -230,23 +227,23 @@ export default [
         path: '/api/commentsCount',
         handler: controllers.commentsCount,
         config: {
-            cors : true,
+            cors: true,
         }
     },
     {
-        method: 'POST',
+        method: 'GET',
         path: '/api/search',
         handler: controllers.search,
         options: {
             validate: {
-                payload: Joi.object({
+                query: Joi.object({
                     searchString: Joi.string().max(300).required(),
                     yearFrom: Joi.number(),
                     yearTo: Joi.number(),
                     type: Joi.string().max(300)
                 }),
             },
-            cors : true,
+            cors: true,
 
         }
     },
@@ -256,9 +253,9 @@ export default [
         handler: controllers.getLikes,
         options: {
             auth: {
-                strategies:['user','admin']
+                strategies: ['user', 'admin']
             },
-            cors : true,
+            cors: true,
         }
     },
     {
@@ -266,7 +263,7 @@ export default [
         path: '/api/likesCount',
         handler: controllers.likesCount,
         config: {
-            cors : true,
+            cors: true,
         }
     },
     {
@@ -275,14 +272,14 @@ export default [
         handler: controllers.addLike,
         options: {
             auth: {
-                strategies:['user','admin']
+                strategies: ['user', 'admin']
             },
             validate: {
                 payload: Joi.object({
                     postId: Joi.string().min(36).required(),
                 }),
             },
-            cors : true,
+            cors: true,
 
         }
     },
@@ -292,14 +289,14 @@ export default [
         handler: controllers.deleteLike,
         options: {
             auth: {
-                strategies:['user','admin']
+                strategies: ['user', 'admin']
             },
             validate: {
                 payload: Joi.object({
                     postId: Joi.string().min(36).required(),
                 }),
             },
-            cors : true,
+            cors: true,
         }
     },
     {

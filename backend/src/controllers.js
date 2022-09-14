@@ -1,12 +1,12 @@
-import { generateHash ,getUserToken } from './helpers.js';
+import { generateHash, getUserToken } from './helpers.js';
 import database from './database/connection.js';
 import Boom from "@hapi/boom";
 
 export default {
     login: async (req, h) => {
         try {
-            let foundUser = await database.user.findOne({ email: req.payload.email, password: generateHash(req.payload.password)});
-            console.log('user in login ',foundUser);
+            let foundUser = await database.user.findOne({ email: req.payload.email, password: generateHash(req.payload.password) });
+            console.log('user in login ', foundUser);
             const isValid = process.env.ADMIN_TOKEN === foundUser.token;
             foundUser.isAdmin = isValid;
             return foundUser;
@@ -22,55 +22,56 @@ export default {
             const alreadyRegistered = await database.user.findOne({ email });
             if (alreadyRegistered) {
                 return Boom.badRequest('Данный email уже занят, попробуйте другой');
+            }
+            const passwordHash = generateHash(password);
+            const result = await database.user.create({
+                email,
+                ...restFields,
+                password: passwordHash,
+            });
+
+            return result;
+
+        } catch (e) {
+            console.log(e);
+            return Boom.badImplementation('Произошла ошибка при регистрации пользователя, попробуйте позднее ' + e.message);
         }
-        const passwordHash = generateHash(password);
-        const result = await database.user.create({
-            email,
-            ...restFields,
-            password: passwordHash,
-        });
-
-        return result;
-
-    } catch (e) {
-        console.log(e);
-        return Boom.badImplementation('Произошла ошибка при регистрации пользователя, попробуйте позднее ' + e.message);
-    }
-},
+    },
     getUserInfo: (req, h) => {
         try {
-    console.log(req.params);
-    return {
-        name: 'Вася',
-        surname: 'Пупкин'
-    };} catch (e) {
+            console.log(req.params);
+            return {
+                name: 'Вася',
+                surname: 'Пупкин'
+            };
+        } catch (e) {
             console.log(e);
             return Boom.badRequest('Ошибка при получении информации о пользователе');
         }
-},
-     hello: (request, h) => {
-    const userName = request.query.name || 'Гость';
-    const age = request.query.age || 'Не родился еще';
-    console.log(request.query);
+    },
+    hello: (request, h) => {
+        const userName = request.query.name || 'Гость';
+        const age = request.query.age || 'Не родился еще';
+        console.log(request.query);
 
-    return `Привет, ${userName}, я сервер. Как у тебя дела? Тебе ${age} лет`;
-},
+        return `Привет, ${userName}, я сервер. Как у тебя дела? Тебе ${age} лет`;
+    },
     deleteUser: async (request, h) => {
         try {
             const user = request.auth.credentials;
             const token = user.token;
-            await database.user.deleteOne({token});
+            await database.user.deleteOne({ token });
             const result = await database.user.find();
             return result;
-        } catch(e){
+        } catch (e) {
             console.log(e);
             return Boom.badRequest('Произошла ошибка при удалении пользователя');
         }
     },
     getUsers: async (request, h) => {
         try {
-           const result = await database.user.find();
-           return result;
+            const result = await database.user.find();
+            return result;
         } catch (e) {
             console.log(e);
             return Boom.badRequest('Произошла ошибка при загрузке пользователей');
@@ -85,13 +86,13 @@ export default {
                 const passwordHash = generateHash(request.payload.password);
                 editUser['password'] = passwordHash;
             }
-            if (request.payload.name){
+            if (request.payload.name) {
                 editUser['name'] = request.payload.name;
             }
-            if (request.payload.surname){
+            if (request.payload.surname) {
                 editUser['surname'] = request.payload.surname;
             }
-            if (request.payload.aboutMyself){
+            if (request.payload.aboutMyself) {
                 editUser['aboutMyself'] = request.payload.aboutMyself;
             }
             const result = await database.user.updateOne({
@@ -100,23 +101,23 @@ export default {
 
             const users = await database.user.find();
             return users;
-    } catch (e) {
+        } catch (e) {
             console.log(e);
             return Boom.badRequest('Произошла ошибка при обновлении');
         }
     },
     addMovie: async (request, h) => {
         try {
-            const moviename = request.payload.moviename;
-            const description = request.payload.description;
+            const moviename = request.query.moviename;
+            const description = request.query.description;
             // const user = await getUserToken(token);
             // const authorName = request.payload.authorName;
             const result = await database.movie.create({
                 moviename: moviename,
                 description: description,
-                year: request.payload.year,
-                poster: request.payload.poster,
-                type: request.payload.type
+                year: request.query.year,
+                poster: request.query.poster,
+                type: request.query.type
                 //authorId : user.id,
                 //authorName : user.name,
 
@@ -142,10 +143,10 @@ export default {
     deleteMovie: async (request, h) => {
         try {
             const postId = request.payload.postId;
-            await database.post.deleteOne({id: postId});
+            await database.post.deleteOne({ id: postId });
             const posts = await database.post.find().sort('-createdAt');
             return posts;
-        }  catch (e) {
+        } catch (e) {
             console.log(e);
             return Boom.badRequest('Произошла ошибка при удалении поста');
         }
@@ -156,12 +157,12 @@ export default {
             const newTitle = request.payload.title;
             const newText = request.payload.text;
             const result = await database.post.updateOne({
-            id: postId
-            }, {title: newTitle, text: newText});
+                id: postId
+            }, { title: newTitle, text: newText });
             console.log(result);
             const posts = await database.post.find().sort('-createdAt');
             return posts;
-        }  catch (e) {
+        } catch (e) {
             console.log(e);
             return Boom.badRequest('Произошла ошибка при редактировании поста');
         }
@@ -170,25 +171,34 @@ export default {
         try {
             console.log(request.payload);
             const movieId = request.payload.MovieId;
-            const result = await database.movie.findOne({id: movieId});
+            const result = await database.movie.findOne({ id: movieId });
             return result;
-        }  catch (e) {
+        } catch (e) {
             console.log(e);
             return Boom.badRequest('Произошла ошибка при получении поста');
         }
     },
     search: async (request, h) => {
         try {
-            const string = request.payload.searchString;
-            const yearFrom = request.payload.yearFrom;
-            const yearTo = request.payload.yearTo;
-            const type = request.payload.type;
-            const searchString = new RegExp(string ,'i');
-            const result = await database.movie.find({
-                moviename: searchString
+            const string = request.query.searchString;
+            const yearFrom = request.query.yearFrom;
+            const yearTo = request.query.yearTo;
+            const type = request.query.type;
+            const searchString = new RegExp(string, 'i');
+            let result = await database.movie.find({
+                $or: [{ moviename: searchString }, { description: searchString }]
             });
+            if (type) {
+                result = result.filter((item) => item.type === type);
+            }
+            if (yearFrom) {
+                result = result.filter((item) => item.year >= yearFrom);
+            }
+            if (yearTo) {
+                result = result.filter((item) => item.year <= yearTo);
+            }
             return result;
-        }  catch (e) {
+        } catch (e) {
             console.log(e);
             return Boom.badRequest('Произошла ошибка при поиске');
         }
@@ -196,24 +206,24 @@ export default {
     getComments: async (request, h) => {
         try {
             const postId = request.payload.postId;
-            const result = await database.comment.find({postId}).sort('-createdAt');
+            const result = await database.comment.find({ postId }).sort('-createdAt');
             return result;
         } catch (e) {
             console.log(e);
             return Boom.badRequest('Произошла ошибка при загрузке комментариев');
         }
     },
-    commentsCount: async (request, h)=> {
+    commentsCount: async (request, h) => {
         try {
             const posts = await database.post.find();
             const comments = await database.comment.find();
-            const commentsCount  = posts.reduce((prValue, post) => {
+            const commentsCount = posts.reduce((prValue, post) => {
                 const count = comments.reduce((previousValue, comment) => {
-                    return comment.postId == post.id ? previousValue+1 : previousValue;
+                    return comment.postId == post.id ? previousValue + 1 : previousValue;
                 }, 0);
-                prValue[post.id]=count;
+                prValue[post.id] = count;
                 return prValue;
-            },{});
+            }, {});
 
             return commentsCount;
         } catch (e) {
@@ -225,7 +235,7 @@ export default {
         try {
             const user = request.auth.credentials;
             const token = user.token;
-            const userInfo = await database.user.findOne({token});
+            const userInfo = await database.user.findOne({ token });
             const postId = request.payload.postId;
             const text = request.payload.text;
             const authorId = userInfo.id;
@@ -245,10 +255,10 @@ export default {
     deleteComment: async (request, h) => {
         try {
             const commentId = request.payload.commentId;
-            await database.comment.deleteOne({id: commentId});
+            await database.comment.deleteOne({ id: commentId });
 
             return 'Коментарий успешно удален';
-        }  catch (e) {
+        } catch (e) {
             console.log(e);
             return Boom.badRequest('Произошла ошибка при удалении комментария');
         }
@@ -259,9 +269,9 @@ export default {
             const newText = request.payload.text;
             const result = await database.comment.updateOne({
                 id: commentId
-            }, {text: newText});
+            }, { text: newText });
             return 'Редактирование комментария произошло успешно';
-        }  catch (e) {
+        } catch (e) {
             console.log(e);
             return Boom.badRequest('Произошла ошибка при редактировании комментария');
         }
@@ -270,13 +280,13 @@ export default {
         try {
             const posts = await database.post.find();
             const likes = await database.like.find();
-            const likesCount  = posts.reduce((prValue, post) => {
+            const likesCount = posts.reduce((prValue, post) => {
                 const count = likes.reduce((previousValue, like) => {
-                    return like.postId == post.id ? previousValue+1 : previousValue;
+                    return like.postId == post.id ? previousValue + 1 : previousValue;
                 }, 0);
-                prValue[post.id]=count;
+                prValue[post.id] = count;
                 return prValue;
-            },{});
+            }, {});
 
             return likesCount;
         } catch (e) {
@@ -288,17 +298,17 @@ export default {
         try {
             const user = request.auth.credentials;
             const token = user.token;
-            const userInfo = await database.user.findOne({token});
+            const userInfo = await database.user.findOne({ token });
             const authorId = userInfo.id;
             const posts = await database.post.find();
             const likes = await database.like.find();
-            const likesCount  = posts.reduce((prValue, post) => {
+            const likesCount = posts.reduce((prValue, post) => {
                 const flag = likes.reduce((previousValue, like) => {
                     return (like.postId == post.id && like.authorId == authorId) ? true : false;
                 }, false);
-                prValue[post.id]=flag;
+                prValue[post.id] = flag;
                 return prValue;
-            },{});
+            }, {});
 
             return likesCount;
         } catch (e) {
@@ -312,7 +322,7 @@ export default {
             const postId = request.payload.postId;
             const user = request.auth.credentials;
             const token = user.token;
-            const userInfo = await database.user.findOne({token});
+            const userInfo = await database.user.findOne({ token });
             const authorId = userInfo.id;
             const result = await database.like.create({
                 postId,
@@ -327,12 +337,12 @@ export default {
     deleteLike: async (request, h) => {
         try {
             const token = request.auth.credentials.token;
-            const userInfo = await database.user.findOne({token});
+            const userInfo = await database.user.findOne({ token });
             const authorId = userInfo.id;
             const postId = request.payload.postId;
-            await database.like.deleteOne({postId: postId, authorId: authorId});
+            await database.like.deleteOne({ postId: postId, authorId: authorId });
             return 'Лайк успешно удален';
-        }  catch (e) {
+        } catch (e) {
             console.log(e);
             return Boom.badRequest('Произошла ошибка при удалении лайка');
         }

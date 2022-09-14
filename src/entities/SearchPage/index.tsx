@@ -6,6 +6,9 @@ import { useAppSelector } from 'hooks/useAppSelector';
 import { getMoviesData } from 'store/pages/Movies/selectors';
 import { genres } from 'constats';
 import { searchMovieAsync } from 'store/pages/Movies/async-actions';
+import { Row, Col } from 'antd';
+import { Link } from 'react-router-dom';
+import style from './Search.module.scss';
 
 const SearchPage = () => {
   const dispatch = useAppDispatch();
@@ -29,7 +32,6 @@ const SearchPage = () => {
   return (
     <>
       <h1>Поиск фильмов по параметрам</h1>
-
       <Form name="createMovie"
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 10 }}
@@ -65,17 +67,17 @@ const SearchPage = () => {
               <Form.Item
                 label="Год выхода от"
                 name="yearFrom"
-                rules={[{ required: false, min: 1895, max: 2022, message: 'Год выхода фильма должен быть от 1895 до 2022' }]}
+                rules={[{ required: false, message: 'Год выхода фильма должен быть от 1895 до 2022' }]}
               >
-                <InputNumber />
+                <InputNumber min="1895" max="2022"/>
               </Form.Item>
 
               <Form.Item
                 label="Год выхода до"
                 name="yearTo"
-                rules={[{ required: false, min: 1895, max: 2022, message: 'Год выхода фильма должен быть от 1895 до 2022' }]}
+                rules={[{ required: false, message: 'Год выхода фильма должен быть от 1895 до 2022' }]}
               >
-                <InputNumber />
+                <InputNumber min="1895" max="2022"/>
               </Form.Item>
 
               <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
@@ -84,6 +86,36 @@ const SearchPage = () => {
                 </Button>
               </Form.Item>
         </Form>
+        {loading === false && !moviesData.length && <p>Ничего не найдено...</p>}
+        {loading && <p>Поиск результатов...</p>}
+        {loading === false && !!moviesData.length && <div>
+          <h2>Результаты поиска</h2>
+          <Row gutter={12}>
+          {
+                  moviesData.map(movie => {
+                  return (
+                    <Col span={6} key={movie.id}>
+                        <div className={style.movie}>
+                            <div className={style.movie__poster}>
+                                <img src={movie.poster} />
+                            </div>
+                            
+                            <h2>
+                                <Link to={'/movies/' + movie.id}>
+                                    {movie.moviename}
+                                </Link>
+                            </h2>
+                            <p>
+                                {movie.type}
+                            </p>
+                        </div>
+                    </Col>
+                  );
+              })
+          }
+          </Row>
+          </div>}
+      
     </>
   );
 };

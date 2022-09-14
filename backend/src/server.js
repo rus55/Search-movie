@@ -21,9 +21,10 @@ const init = async () => {
         routes: {
             validate: {
                 failAction: (req, h, err) => {
-                    throw err;   //метод выбрасывает ошибку
+                    throw err;
                 }
-            }
+            },
+            cors: true
         }
     });
 
