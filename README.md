@@ -1,25 +1,21 @@
-Проект "Поиск фильмов".
+Film search project
 
-Данный проект написан на ReactJS, используя Redux, хуки  и модульные стили.
-В приложении реализован следующий функционал:
+This project is written in ReactJS using Redux, hooks and modular styles. The application implements the following functionality:
 
-- Добавление фильма
-- Просмотр списка фильмов - каталог
-- Поиск фильмов по параметрам
-- Просмотр страницы фильма        
-      
-В приложении использовался самописный бекенд.
+Adding a movie
+Browse movie list - catalog
+Search for movies by parameters
+Movie Page View
+The application used a self-written backend.
 
 ---------------------------------------------------------
 
-Перед запуском необходимо установить базу данных MongoDB !
+MongoDB database needs to be installed before running!
 
-Как запустить:
+How to start:
 
-1)Перейти в папку backend
-1.1) npm i
-1.2) Запустить сервер командой npm run server
+1) Go to the backend folder 1.1) npm i 1.2) Run the server with the command npm run server
 
-2)В другом терминале перейти в папку Search-movie
-2.1) npm i
-2.1) Запустить командой npm start
+2) In another terminal, go to the Search-movie folder 2.1) npm i 2.1) Run with the npm start command
+
+
