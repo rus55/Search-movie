@@ -2,10 +2,11 @@ Film search project
 
 This project is written in ReactJS using Redux, hooks and modular styles. The application implements the following functionality:
 
-Adding a movie
-Browse movie list - catalog
-Search for movies by parameters
-Movie Page View
+- Adding a movie
+- Browse movie list - catalog
+- Search for movies by parameters
+- Movie Page View
+
 The application used a self-written backend.
 
 ---------------------------------------------------------
